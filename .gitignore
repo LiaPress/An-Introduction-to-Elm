@@ -5,3 +5,6 @@
 !/metadata.yml
 !/assets/
 !/.gitignore
+!/.github/
+/.github/*
+!/.github/workflows/

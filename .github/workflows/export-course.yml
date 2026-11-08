@@ -1,0 +1,121 @@
+# Builds downloads of the course (H5P, IMS, SCORM 1.2, SCORM 2004, PDF, ePub)
+# and attaches them to a GitHub release:
+#   - push to main   -> release "latest" (replaced on every push, marked as pre-release)
+#   - push a tag     -> release with the tag's name, e.g. "1.0.0"
+#   - by hand        -> Actions tab -> "Export course downloads" -> Run workflow
+#
+# The runnable Elm examples load the elm-guida template from GitHub, so in an LMS or
+# H5P package they need internet access; PDF and ePub show them as code.
+
+name: Export course downloads
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "*"
+      - "!latest"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: export-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  export:
+    runs-on: ubuntu-24.04
+    env:
+      NAME: An-Introduction-to-Elm
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          path: project
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Install LiaScript Exporter
+        run: npm install -g @liascript/exporter
+
+      - name: Install Chromium system dependencies (PDF, ePub)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgbm-dev libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 \
+            libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 \
+            libpango-1.0-0 libcairo2 libasound2t64 libnss3 libnspr4 \
+            fonts-liberation ca-certificates wget
+
+      - name: Prepare a clean copy of the course
+        # only the course goes into the packages – never .git/, metadata.yml or earlier exports
+        run: |
+          COURSE="$RUNNER_TEMP/course"
+          OUT="$RUNNER_TEMP/out"
+          rm -rf "$COURSE" "$OUT"
+          mkdir -p "$COURSE" "$OUT"
+          cp project/README.md project/LICENSE "$COURSE/"
+          cp -r project/assets "$COURSE/"
+          echo "COURSE=$COURSE" >> "$GITHUB_ENV"
+          echo "OUT=$OUT" >> "$GITHUB_ENV"
+
+      - name: H5P
+        run: liaex -i "$COURSE/README.md" -f h5p -o "$OUT/$NAME"
+
+      - name: IMS
+        run: liaex -i "$COURSE/README.md" -f ims -o "$OUT/$NAME-ims"
+
+      - name: SCORM 1.2 (Moodle 4/5, OPAL, OpenOLAT, Open edX)
+        run: >-
+          liaex -i "$COURSE/README.md" -f scorm1.2 -o "$OUT/$NAME-scorm12"
+          --scorm-embed --scorm-masteryScore 0 --scorm-typicalDuration PT4H0M0S
+
+      - name: SCORM 2004 (ILIAS, LearnWorlds, SCORM Cloud)
+        run: >-
+          liaex -i "$COURSE/README.md" -f scorm2004 -o "$OUT/$NAME-scorm2004"
+          --scorm-iframe --scorm-masteryScore 0 --scorm-typicalDuration PT4H0M0S
+
+      - name: PDF
+        env:
+          PUPPETEER_ARGS: "--no-sandbox --disable-setuid-sandbox"
+        run: liaex -i "$COURSE/README.md" -f pdf -o "$OUT/$NAME" --pdf-timeout 120000
+
+      - name: ePub
+        env:
+          PUPPETEER_ARGS: "--no-sandbox --disable-setuid-sandbox"
+        run: liaex -i "$COURSE/README.md" -f epub -o "$OUT/$NAME" --epub-publisher "LiaPress"
+
+      - name: Attach the downloads to a release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          FILES=(
+            "$OUT/$NAME.h5p"
+            "$OUT/$NAME-ims.zip"
+            "$OUT/$NAME-scorm12.zip"
+            "$OUT/$NAME-scorm2004.zip"
+            "$OUT/$NAME.pdf"
+            "$OUT/$NAME.epub"
+          )
+          ls -la "${FILES[@]}"
+          VIEWER="https://liascript.github.io/course/?https://raw.githubusercontent.com/$GITHUB_REPOSITORY/$GITHUB_SHA/README.md"
+          NOTES="Downloads of the LiaScript course, built from commit $GITHUB_SHA. Open it online: $VIEWER
+
+          The official Elm guide by Evan Czaplicki, converted to LiaScript – licence CC BY-NC-ND 4.0 (see LICENSE)."
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            TAG="$GITHUB_REF_NAME"
+            gh release delete "$TAG" --yes --repo "$GITHUB_REPOSITORY" || true
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag \
+              --title "$TAG" --notes "$NOTES" "${FILES[@]}"
+          else
+            gh release delete latest --cleanup-tag --yes --repo "$GITHUB_REPOSITORY" || true
+            gh release create latest --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease \
+              --title "Latest build (main)" --notes "$NOTES" "${FILES[@]}"
+          fi
