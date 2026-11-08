@@ -1,0 +1,7 @@
+# Only the course is published; everything else in this folder belongs to the authoring tools.
+/*
+!/README.md
+!/LICENSE
+!/metadata.yml
+!/assets/
+!/.gitignore
