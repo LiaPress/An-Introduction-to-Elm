@@ -3,6 +3,7 @@ author:   Evan Czaplicki
 version:  1.0.0
 language: en
 narrator: US English Female
+logo:     ./assets/course-logo-16x9.png
 comment:  The official Elm guide "An Introduction to Elm" by Evan Czaplicki,
           converted to LiaScript – text unchanged, examples runnable in the browser.
 
