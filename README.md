@@ -3,7 +3,7 @@ author:   Evan Czaplicki
 version:  1.0.0
 language: en
 narrator: US English Female
-logo:     ./assets/course-logo-16x9.png
+logo:     assets/logo.png
 comment:  The official Elm guide "An Introduction to Elm" by Evan Czaplicki,
           converted to LiaScript – text unchanged, examples runnable in the browser.
 
@@ -166,7 +166,7 @@ details, .lia-quote, .lia-code__input, .lia-table-responsive, .lia-card {
 @end
 -->
 
-![Logo of the LiaScript version of "An Introduction to Elm": three blue building blocks – a square, a triangle and a chevron – beside the title](assets/course-logo-16x9.png)
+![Elm tangram logo above the title "An Introduction to Elm" on a white background](assets/logo.png)
 
 [![LiaScript](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/course.svg)](https://liascript.github.io/course/?https://raw.githubusercontent.com/LiaPress/An-Introduction-to-Elm/main/README.md)
 
