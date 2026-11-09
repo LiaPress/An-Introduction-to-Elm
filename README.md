@@ -7,6 +7,8 @@ logo:     ./assets/course-logo-16x9.png
 comment:  The official Elm guide "An Introduction to Elm" by Evan Czaplicki,
           converted to LiaScript – text unchanged, examples runnable in the browser.
 
+edit:     true
+
 import:   https://raw.githubusercontent.com/LiaTemplates/elm-guida/0.0.2/README.md
 
 link:     https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=Source+Code+Pro:wght@400;600&display=swap
@@ -163,6 +165,23 @@ details, .lia-quote, .lia-code__input, .lia-table-responsive, .lia-card {
 --color-highlight-menu: 255,255,255;
 @end
 -->
+
+![Logo of the LiaScript version of "An Introduction to Elm": three blue building blocks – a square, a triangle and a chevron – beside the title](assets/course-logo-16x9.png)
+
+[![LiaScript](https://raw.githubusercontent.com/LiaScript/LiaScript/master/badges/course.svg)](https://liascript.github.io/course/?https://raw.githubusercontent.com/LiaPress/An-Introduction-to-Elm/main/README.md)
+
+[![LiveEditor](https://raw.githubusercontent.com/LiaScript/LiaScript/refs/heads/development/badges/edit.svg)](https://liascript.github.io/LiveEditor/?/show/file/https://raw.githubusercontent.com/LiaPress/An-Introduction-to-Elm/main/README.md)
+
+> **This is a port, not a new book.** It is the official Elm guide
+> [**An Introduction to Elm**](https://guide.elm-lang.org/) by **Evan Czaplicki**
+> ([source on GitHub](https://github.com/evancz/guide.elm-lang.org)), converted to
+> [LiaScript](https://liascript.github.io). The text is unchanged – the port only makes the
+> book interactive: every example program and every REPL box runs right in the browser,
+> compiled by [Guida](https://github.com/guida-lang/compiler), Décio Ferreira's port of the
+> Elm compiler, through the LiaScript template [elm-guida](https://github.com/LiaTemplates/elm-guida).
+> To read the original, go to [guide.elm-lang.org](https://guide.elm-lang.org/).
+> This port is not an official Elm project and is not endorsed by Evan Czaplicki.
+> Licence: [CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/) – see [LICENSE](LICENSE).
 
 # An Introduction to Elm
 
@@ -4643,4 +4662,4 @@ This course is the official Elm guide **An Introduction to Elm** by **Evan Czapl
 * Source: [github.com/evancz/guide.elm-lang.org](https://github.com/evancz/guide.elm-lang.org/tree/57567579ae4b3f75906c50d9e410c69504e29638) at commit `5756757`
 * License: [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
 
-Converted to LiaScript format; the text is unchanged. Only the format was changed: the interactive REPL boxes and the example programs run directly in the browser with the template [elm-guida](https://github.com/LiaTemplates/elm-guida), which compiles with Elm 0.19.1 (the guide itself refers to Elm 0.19.3). Images and the video are taken from the original repository.
+Converted to LiaScript format; the text is unchanged. Only the format was changed: the interactive REPL boxes and the example programs run directly in the browser with the template [elm-guida](https://github.com/LiaTemplates/elm-guida), which compiles with [Guida](https://github.com/guida-lang/compiler) – Décio Ferreira's port of the Elm 0.19.1 compiler, licensed under [BSD-3-Clause](https://github.com/guida-lang/compiler/blob/master/LICENSE) (the guide itself refers to Elm 0.19.3). Images and the video are taken from the original repository. This port is not an official Elm project and is not endorsed by Evan Czaplicki.
